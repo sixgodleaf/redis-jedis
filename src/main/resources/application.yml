@@ -1,0 +1,47 @@
+
+#druid数据库连接池配置
+spring:
+  datasource:
+    name: tjtt
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/test?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
+    username: root
+    password: w921211d
+    maxActive: 20
+    minIdle: 5
+    initialSize: 10
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 10
+    testWhileIdle: true
+    validationQuery: SELECT 1 FROM DUAL
+    testOnBorrow: false
+    testOnReturn: false
+    filters: stat,wall,lombok
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+redis-student:
+  redis:
+    host: 39.106.193.32
+    port: 6379
+    password: 921210
+    database: 3
+    jedis:
+      pool:
+        max-active: 1024
+        max-idle: 100
+        min-idle: 0
+
+
+# 分页配置
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+
+
+
