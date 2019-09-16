@@ -1,7 +1,6 @@
 package com.wjj.redis.test;
 
-import com.wjj.redis.util.RedisLock;
-import com.wjj.redis.util.RedisUtil;
+import com.wjj.redis.util.RedisClient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -26,7 +24,7 @@ import java.util.List;
 public class RedisTest {
 
     @Autowired
-    private RedisUtil redisUtil;
+    private RedisClient redisClient;
     @Autowired
     private JedisPool jedisPool;
 
@@ -35,7 +33,7 @@ public class RedisTest {
      */
     @Test
     public void test0() {
-        String result = redisUtil.get("wjj");
+        String result = redisClient.get("wjj");
         if (result==null) {
             System.out.println("result...null");
         }else {
@@ -45,19 +43,19 @@ public class RedisTest {
 
     @Test
     public void test1() {
-        Long count = redisUtil.zremrangeByScore("age",0,20);
+        Long count = redisClient.zremrangeByScore("age",0,20);
         System.out.println(count);
     }
 
     @Test
     public void test2() {
-        String nx1 = redisUtil.setNx("nx1", "1", 60 * 60);
+        String nx1 = redisClient.setNx("nx1", "1", 60 * 60);
         System.out.println(nx1);
     }
 
     @Test
     public void test3() {
-        String nx1 = redisUtil.setNx("nx1", "1", 60 * 60);
+        String nx1 = redisClient.setNx("nx1", "1", 60 * 60);
         System.out.println(nx1);
     }
 
@@ -67,7 +65,7 @@ public class RedisTest {
      */
     @Test
     public void test4() {
-        String nx1 = redisUtil.setNx("nx2", "8845", 60 * 60);
+        String nx1 = redisClient.setNx("nx2", "8845", 60 * 60);
         System.out.println(nx1);
     }
 
@@ -83,7 +81,7 @@ public class RedisTest {
         key.add("nx2");
         List<String> args = new ArrayList<>();
         args.add("8845");
-        Long result = (Long)redisUtil.eval(luaScript, key, args);
+        Long result = (Long) redisClient.eval(luaScript, key, args);
         System.out.println(result);
 
     }
@@ -97,7 +95,7 @@ public class RedisTest {
 
     @Test
     public void hset() {
-        Long thumb = redisUtil.hset("thumb", "c1::u1", "1");
+        Long thumb = redisClient.hset("thumb", "c1::u1", "1");
         System.out.println(thumb);
     }
 
@@ -120,7 +118,7 @@ public class RedisTest {
 
     @Test
     public void hGet() {
-        String hget = redisUtil.hget("wjj1", "age");
+        String hget = redisClient.hget("wjj1", "age");
         System.out.println(hget);
     }
 
@@ -139,7 +137,7 @@ public class RedisTest {
         List<String> args = new ArrayList<>();
         args.add("88589");
         args.add("36000");
-        long result = (long) redisUtil.eval(luaScript, key, args);
+        long result = (long) redisClient.eval(luaScript, key, args);
         System.out.println(result);
     }
 
@@ -157,7 +155,7 @@ public class RedisTest {
         key.add("cash:442");
         List<String> args = new ArrayList<>();
         args.add("88589");
-        long result = (long) redisUtil.eval(luaScript, key, args);
+        long result = (long) redisClient.eval(luaScript, key, args);
         System.out.println(result);
     }
 
@@ -182,7 +180,7 @@ public class RedisTest {
             long arg2 = currentTimeMillis-60*1000;
             args.add(String.valueOf(arg2));
             args.add("5");
-            long result = (long) redisUtil.eval(luaScript, key, args);
+            long result = (long) redisClient.eval(luaScript, key, args);
             if (result==1) {
                 System.out.println("success..."+i);
             }else {
@@ -210,7 +208,7 @@ public class RedisTest {
         args.add("3");
         args.add("23");
         args.add("cxh");
-        long result = (long) redisUtil.eval(luaScript, key, args);
+        long result = (long) redisClient.eval(luaScript, key, args);
         System.out.println(result);
     }
 

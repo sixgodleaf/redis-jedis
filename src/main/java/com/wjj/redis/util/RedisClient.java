@@ -1,14 +1,13 @@
 package com.wjj.redis.util;
 
 import com.wjj.redis.JReBloom.JReBloomClinet;
-import com.wjj.redis.JReBloom.JReBloomCommand;
-import io.rebloom.client.Client;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import redis.clients.jedis.Connection;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.ScanParams;
+import redis.clients.jedis.ScanResult;
 import redis.clients.jedis.params.SetParams;
 
 import java.util.*;
@@ -23,13 +22,7 @@ import java.util.*;
 
 @Component
 @Slf4j
-public class RedisUtil {
-
-    /*@Value("${redisStudent.redis.host}")
-    private String host;
-
-    @Value("${redisStudent.redis.port}")
-    private int port;*/
+public class RedisClient {
 
     @Autowired
     private JedisPool jedisPool;
@@ -191,9 +184,161 @@ public class RedisUtil {
         return res;
     }
 
+    /**
+     * hincrBy 增加
+     * @param key
+     * @param field
+     * @param incrValue
+     * @return
+     */
+    public Long hincrBy(String key,String field,long incrValue) {
+        Jedis jedis = null;
+        Long res = null;
+        try {
+            jedis = jedisPool.getResource();
+            res = jedis.hincrBy(key, field, incrValue);
+
+        }  finally {
+            if (jedis!=null) {
+                jedis.close();
+            }
+        }
+        return res;
+    }
+
+    /**
+     * hgetAll 获取key 的属性和属性值
+     * @param key
+     * @return
+     */
+    public Map<String, String> hgetAll(String key) {
+        Jedis jedis = null;
+        Map<String, String> res = null;
+        try {
+            jedis = jedisPool.getResource();
+            res = jedis.hgetAll(key);
+
+        }  finally {
+            if (jedis!=null) {
+                jedis.close();
+            }
+        }
+        return res;
+    }
+
+    /**
+     * redis  list
+     */
+
+    /**
+     * list 添加
+     *
+     * @param key
+     * @param value
+     * @return
+     */
+    public Long lpush(String key, String value) {
+        Jedis jedis = null;
+        Long res = null;
+        try {
+            jedis = jedisPool.getResource();
+            res = jedis.lpush(key, value);
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return res;
+    }
+
+    /**
+     * 获取list 列表
+     *
+     * @param key
+     * @param start 开始
+     * @param end   结束  -1 为最后
+     * @return
+     */
+    public List lrange(String key, int start, int end) {
+        Jedis jedis = null;
+        List res = null;
+        try {
+            jedis = jedisPool.getResource();
+            res = jedis.lrange(key, start, end);
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return res;
+    }
+
+    /**
+     * Ltrim 对一个列表进行修剪(trim)，就是说，让列表只保留指定区间内的元素，不在指定区间之内的元素都将被删除。
+     *
+     * @param key
+     * @param start
+     * @param end   -1 表示列表的最后一个元素
+     */
+    public void ltrim(String key, int start, int end) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            jedis.ltrim(key, start, end);
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+    }
+
+    /**
+     *  根据参数 index 的值，移除列表中与参数 VALUE 相等的元素
+     * @param key
+     * @param value 删除的值
+     * @param count 从表头开始向表尾搜索，移除与 VALUE 相等的元素，数量为 COUNT
+     *              从表尾开始向表头搜索，移除与 VALUE 相等的元素，数量为 COUNT 的绝对值
+     *              移除表中所有与 VALUE 相等的值
+     */
+    public void lrem(String key,String value,int count) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            jedis.lrem(key,count,value);
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+    }
+
 
 
     //zset
+
+    /**
+     * 返回 分数值
+     *
+     * @param key
+     * @param value
+     * @return
+     */
+    public Double zscore(String key, String value) {
+        Jedis jedis = null;
+        Double res = null;
+        try {
+            jedis = jedisPool.getResource();
+            res = jedis.zscore(key, value);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return res;
+    }
+
 
     /**
      * 新增
@@ -337,7 +482,6 @@ public class RedisUtil {
 
 
 
-
     /**
      * 执行lua脚本
      * @param luaScript
@@ -465,15 +609,69 @@ public class RedisUtil {
      * @return jeis
      */
     public Jedis getJedis() {
-         return jedisPool.getResource();
+        return jedisPool.getResource();
     }
 
 
-    public void createFilter(String key) {
 
-        Client jReBloomClient = new Client("39.106.193.32",6379);
-        jReBloomClient.add(key,"1");
-        jReBloomClient.createFilter(key,1000000, 0.01);
+
+    //HyperLogLog 不精确去重
+
+    /**
+     * 添加元素
+     * @param key
+     * @param value 1 添加成功 0 没成功 （可能有重复）
+     */
+    public Long pfAdd(String key, String ...value) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            return jedis.pfadd(key,value);
+        }  finally {
+            if (jedis!=null) {
+                jedis.close();
+            }
+        }
+    }
+
+    /**
+     * 统计数量
+     * @param key
+     * @return
+     */
+    public Long pfCount(String key) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            return jedis.pfcount(key);
+        }  finally {
+            if (jedis!=null) {
+                jedis.close();
+            }
+        }
+    }
+
+    /**
+     * 遍历 key
+     * @param key key 正则表达式
+     * @param cursor 游标 起始位置0 结束为0
+     * @param limit 遍历的次数
+     * @return
+     */
+    public ScanResult<String> scan(String key,String cursor,int limit) {
+        Jedis jedis = null;
+        try {
+            jedis=jedisPool.getResource();
+            ScanParams scanParams = new ScanParams();
+            scanParams.match(key);
+            scanParams.count(limit);
+            return jedis.scan(cursor, scanParams);
+        } finally {
+            if (jedis!=null) {
+                jedis.close();
+            }
+        }
+
     }
 
 

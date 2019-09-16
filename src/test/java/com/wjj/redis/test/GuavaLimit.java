@@ -1,10 +1,6 @@
 package com.wjj.redis.test;
 
-import com.google.common.hash.BloomFilter;
-import com.google.common.hash.Funnels;
-import com.wjj.redis.util.GsonUtil;
-import com.wjj.redis.util.RedisUtil;
-import org.junit.Test;
+import com.wjj.redis.util.RedisClient;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,7 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class GuavaLimit {
 
     @Autowired
-    private RedisUtil redisUtil;
+    private RedisClient redisClient;
 
 
 }

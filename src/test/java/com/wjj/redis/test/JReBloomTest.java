@@ -1,19 +1,12 @@
 package com.wjj.redis.test;
 
-import com.wjj.redis.util.RedisUtil;
-import com.wjj.redis.util.ScriptUtil;
+import com.wjj.redis.util.RedisClient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import redis.clients.jedis.Jedis;
 import redis.clients.jedis.exceptions.JedisDataException;
-import redis.clients.jedis.exceptions.JedisException;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @Author: wangjunjie 2019/7/4 11:41
@@ -27,7 +20,7 @@ import java.util.List;
 public class JReBloomTest {
 
     @Autowired
-    private RedisUtil redisUtil;
+    private RedisClient redisClient;
 
     @Test
     public void test() {
@@ -36,7 +29,7 @@ public class JReBloomTest {
         }*/
         int falses=0;
         for (int i=1000;i<3000;++i) {
-            if(redisUtil.jReBloomAdd("newbloom:189",String.valueOf(i))) {
+            if(redisClient.jReBloomAdd("newbloom:189",String.valueOf(i))) {
                 ++falses;
             }else {
                 System.out.println(i);
@@ -49,7 +42,7 @@ public class JReBloomTest {
     @Test
     public void createFilter() {
         try {
-            String res = redisUtil.createFilter("bloom:211", 10000, 0.9);
+            String res = redisClient.createFilter("bloom:211", 10000, 0.9);
             System.out.println(res);
         }catch (JedisDataException e) {
             System.out.println("ERR item exists");

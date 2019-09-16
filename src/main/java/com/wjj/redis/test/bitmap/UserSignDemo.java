@@ -1,5 +1,6 @@
-package com.wjj.redis.test;
+package com.wjj.redis.test.bitmap;
 
+import com.wjj.redis.test.JedisUtil;
 import redis.clients.jedis.Jedis;
 
 import java.time.LocalDate;
@@ -11,7 +12,7 @@ import java.util.TreeMap;
 
 /**
  * @Author: wangjunjie 2019/6/26 16:18
- * @Description: 签到
+ * @Description: 位图实战 签到
  * @Version: 1.0.0
  * @Modified By: xxx 2019/6/26 16:18
  */

@@ -1,6 +1,6 @@
 package com.wjj.redis.test;
 
-import com.wjj.redis.util.RedisUtil;
+import com.wjj.redis.util.RedisClient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Random;
 import java.util.Set;
-import java.util.zip.DeflaterOutputStream;
 
 /**
  * @Author: wangjunjie 2019/5/10 14:02
@@ -23,7 +22,7 @@ import java.util.zip.DeflaterOutputStream;
 public class RedisHistoryTest {
 
     @Autowired
-    private RedisUtil redisUtil;
+    private RedisClient redisClient;
 
     //阅读历史
     @Test
@@ -32,15 +31,15 @@ public class RedisHistoryTest {
         for (int i=0;i<50;++i) {
             String value = random.nextInt(50)+"new";
             int score = random.nextInt(50);
-            redisUtil.zadd("read_history:188",value,score);
+            redisClient.zadd("read_history:188",value,score);
         }
-        redisUtil.expire("read_history:187",86400);
+        redisClient.expire("read_history:187",86400);
     }
 
 
     @Test
     public void getReadHistory() {
-        Set<String> set = redisUtil.zrevrange("read_history:188", 0, 2);
+        Set<String> set = redisClient.zrevrange("read_history:188", 0, 2);
         for (String s : set) {
             System.out.println(s);
         }
