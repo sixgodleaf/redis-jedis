@@ -78,6 +78,7 @@ public class RedisClient {
      * @return 成功 key
      */
     public String set(String key, String value) {
+
         Jedis jedis = null;
         try {
             jedis = jedisPool.getResource();
