@@ -26,7 +26,7 @@ redis-student:
     host: 39.106.193.32
     port: 6379
     password: 921210
-    database: 3
+    database: 2
     jedis:
       pool:
         max-active: 1024

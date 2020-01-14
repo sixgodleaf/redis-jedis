@@ -33,7 +33,7 @@ public class RedisTest {
      */
     @Test
     public void test0() {
-        String result = redisClient.get("wjj");
+        String result = redisClient.string().get("wjj");
         if (result==null) {
             System.out.println("result...null");
         }else {
@@ -43,7 +43,7 @@ public class RedisTest {
 
     @Test
     public void test1() {
-        Long count = redisClient.zremrangeByScore("age",0,20);
+        Long count = redisClient.zset().zremrangeByScore("age",0,20);
         System.out.println(count);
     }
 

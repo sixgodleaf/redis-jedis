@@ -28,7 +28,7 @@ public class ScanTest {
     @Test
     public void test1() {
         for (int x= 50; x<70;++x) {
-            redisClient.set("test:scan:"+x,"1");
+            redisClient.string().set("test:scan:"+x,"1");
         }
     }
 
