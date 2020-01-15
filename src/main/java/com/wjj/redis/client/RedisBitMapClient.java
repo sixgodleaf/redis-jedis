@@ -1,49 +1,66 @@
-package com.wjj.redis.util;
+package com.wjj.redis.client;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
-public class RedisStringClient {
+/**
+ * redis 位图
+ */
+public class RedisBitMapClient {
 
     private JedisPool jedisPool;
 
-    public RedisStringClient(JedisPool jedisPool) {
+    public RedisBitMapClient(JedisPool jedisPool) {
         this.jedisPool = jedisPool;
     }
 
+
     /**
-     * 获取值
-     *
-     * @param key 如果不存在，则返回null
+     * @param key
+     * @param offset 偏移量
+     * @param flag   true 1 false 0
+     * @return true 重复设置（偏移量和flag一样）
+     */
+    public boolean setBit(String key, int offset, boolean flag) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            return jedis.setbit(key, offset, flag);
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+    }
+
+    /**
+     * @param key
+     * @param offset 偏移量
+     * @return true 1 false 0
+     */
+    public boolean getBit(String key, int offset) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            return jedis.getbit(key, offset);
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+    }
+
+
+    /**
+     * @param key
      * @return
      */
-    public String get(String key) {
-        Jedis jedis = null;
-        String value = null;
-        try {
-            jedis = jedisPool.getResource();
-            value = jedis.get(key);
+    public Long bitCount(String key) {
 
-        } finally {
-            if (jedis != null) {
-                jedis.close();
-            }
-        }
-        return value;
-    }
-
-
-
-    /**
-     * @param key
-     * @param value
-     * @return 成功 key
-     */
-    public String set(String key, String value) {
         Jedis jedis = null;
         try {
             jedis = jedisPool.getResource();
-            return jedis.set(key, value);
+            return jedis.bitcount(key);
         } finally {
             if (jedis != null) {
                 jedis.close();
@@ -52,40 +69,21 @@ public class RedisStringClient {
     }
 
     /**
+     * 返回的首次偏移量，
+     *
      * @param key
-     * @return value(增加后的值)
+     * @param flag true 1 false 0
+     * @return -1 没有设置
      */
-    public Long incr(String key) {
+    public Long bitpos(String key, boolean flag) {
         Jedis jedis = null;
-        Long value = null;
         try {
             jedis = jedisPool.getResource();
-            value = jedis.incr(key);
-            return value;
+            return jedis.bitpos(key, flag);
         } finally {
             if (jedis != null) {
                 jedis.close();
             }
         }
     }
-
-    /**
-     * @param key
-     * @param incrValue 增加后的值
-     * @return value(增加后的值)
-     */
-    public Long incrBy(String key, int incrValue) {
-        Jedis jedis = null;
-        Long value = null;
-        try {
-            jedis = jedisPool.getResource();
-            value = jedis.incrBy(key, incrValue);
-            return value;
-        } finally {
-            if (jedis != null) {
-                jedis.close();
-            }
-        }
-    }
-
 }

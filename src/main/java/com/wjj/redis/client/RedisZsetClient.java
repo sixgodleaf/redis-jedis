@@ -1,4 +1,4 @@
-package com.wjj.redis.util;
+package com.wjj.redis.client;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -61,7 +61,7 @@ public class RedisZsetClient {
     }
 
     /**
-     * 查询
+     * 查询指定成员的索引 从0开始 如果不存在返回null
      * @param key
      * @param value
      * @return

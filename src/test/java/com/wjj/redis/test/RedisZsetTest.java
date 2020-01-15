@@ -1,17 +1,13 @@
 package com.wjj.redis.test;
 
-import com.wjj.redis.util.RedisClient;
+import com.wjj.redis.client.RedisClient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Tuple;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -35,6 +31,12 @@ public class RedisZsetTest {
         for (Tuple star : stars) {
             System.out.println(star.getElement()+":"+star.getScore());
         }
+    }
+
+    @Test
+    public void test2() {
+        Long index = redisClient.zset().zrank("stars", "gulinaza1");
+        System.out.println(index);
     }
 
 

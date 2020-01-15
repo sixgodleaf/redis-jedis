@@ -1,6 +1,6 @@
 package com.wjj.redis.test;
 
-import com.wjj.redis.util.RedisClient;
+import com.wjj.redis.client.RedisClient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class JReBloomTest {
         }*/
         int falses=0;
         for (int i=1000;i<3000;++i) {
-            if(redisClient.jReBloomAdd("newbloom:189",String.valueOf(i))) {
+            if(redisClient.bloom().jReBloomAdd("newbloom:189",String.valueOf(i))) {
                 ++falses;
             }else {
                 System.out.println(i);
@@ -42,7 +42,7 @@ public class JReBloomTest {
     @Test
     public void createFilter() {
         try {
-            String res = redisClient.createFilter("bloom:211", 10000, 0.9);
+            String res = redisClient.bloom().createFilter("bloom:211", 10000, 0.9);
             System.out.println(res);
         }catch (JedisDataException e) {
             System.out.println("ERR item exists");

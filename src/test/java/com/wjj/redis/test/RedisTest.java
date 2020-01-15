@@ -1,6 +1,6 @@
 package com.wjj.redis.test;
 
-import com.wjj.redis.util.RedisClient;
+import com.wjj.redis.client.RedisClient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +47,7 @@ public class RedisTest {
         System.out.println(count);
     }
 
-    @Test
+  /*  @Test
     public void test2() {
         String nx1 = redisClient.setNx("nx1", "1", 60 * 60);
         System.out.println(nx1);
@@ -58,17 +58,17 @@ public class RedisTest {
         String nx1 = redisClient.setNx("nx1", "1", 60 * 60);
         System.out.println(nx1);
     }
+*/
 
-
-    /**
+ /*   *//**
      * 分布式锁 加锁
-     */
+     *//*
     @Test
     public void test4() {
         String nx1 = redisClient.setNx("nx2", "8845", 60 * 60);
         System.out.println(nx1);
     }
-
+*/
     /**
      * 分布式锁 解锁
      */
@@ -95,7 +95,7 @@ public class RedisTest {
 
     @Test
     public void hset() {
-        Long thumb = redisClient.hset("thumb", "c1::u1", "1");
+        Long thumb = redisClient.hash().hset("thumb", "c1::u1", "1");
         System.out.println(thumb);
     }
 
@@ -118,7 +118,7 @@ public class RedisTest {
 
     @Test
     public void hGet() {
-        String hget = redisClient.hget("wjj1", "age");
+        String hget = redisClient.hash().hget("wjj1", "age");
         System.out.println(hget);
     }
 
