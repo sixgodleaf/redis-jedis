@@ -182,22 +182,6 @@ public class RedisLock implements InitializingBean {
                 jedis.close();
             }
         }
-
-
     }
 
-
-
-
-    /*public boolean unlock(String key,String value) {
-        String luaScript = "if redis.call('get', KEYS[1]) == " +
-                "ARGV[1] then return redis.call('del', KEYS[1]) else " +
-                "return 0 end";
-        Object eval = redisUtil.eval(luaScript, key, value);
-        if ((long)eval==1) {
-            return true;
-        }else {
-            return false;
-        }
-    }*/
 }

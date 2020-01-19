@@ -1,10 +1,7 @@
 package com.wjj.redis.JReBloom;
 
-import io.rebloom.client.Client;
 import redis.clients.jedis.Connection;
 import redis.clients.jedis.Jedis;
-
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

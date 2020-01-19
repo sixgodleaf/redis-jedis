@@ -507,6 +507,25 @@ public class RedisClient {
     }
 
     /**
+     * 先加载脚本到redis 执行lua脚本
+     * @param luaScriptId 脚本标识
+     * @param key
+     * @param args
+     * @returnd
+     */
+    public Object evalsha(String luaScriptId,List<String> key,List<String> args) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            return jedis.evalsha(luaScriptId, key, args);
+        } finally {
+            if (jedis!=null) {
+                jedis.close();
+            }
+        }
+    }
+
+    /**
      * 分布式锁
      * @param key
      * @param value

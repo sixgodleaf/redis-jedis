@@ -2,7 +2,6 @@ package com.wjj.redis.test.bitmap;
 
 import com.wjj.redis.test.JedisUtil;
 import redis.clients.jedis.Jedis;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
