@@ -1,6 +1,6 @@
 package com.wjj.redis.test;
 
-import com.wjj.redis.util.RedisClient;
+import com.wjj.redis.client.RedisClient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +25,13 @@ public class HsetTest {
 
     @Test
     public void test1() {
-        Long read = redisClient.hincrBy("content:8859", "news", 1);
+        Long read = redisClient.hash().hincrBy("content:8859", "news", 1);
         System.out.println(read);
     }
 
     @Test
     public void test2() {
-        Map<String, String> map = redisClient.hgetAll("content:8859");
+        Map<String, String> map = redisClient.hash().hgetAll("content:8859");
         String read = map.get("read");
         String collection = map.get("collection");
         String share = map.get("share");

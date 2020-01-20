@@ -1,6 +1,6 @@
 package com.wjj.redis.test;
 
-import com.wjj.redis.util.RedisClient;
+import com.wjj.redis.client.RedisClient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class RedisHistoryTest {
         for (int i=0;i<50;++i) {
             String value = random.nextInt(50)+"new";
             int score = random.nextInt(50);
-            redisClient.zadd("read_history:188",value,score);
+            redisClient.zset().zadd("read_history:188",value,score);
         }
         redisClient.expire("read_history:187",86400);
     }
@@ -39,7 +39,7 @@ public class RedisHistoryTest {
 
     @Test
     public void getReadHistory() {
-        Set<String> set = redisClient.zrevrange("read_history:188", 0, 2);
+        Set<String> set = redisClient.zset().zrevrange("read_history:188", 0, 2);
         for (String s : set) {
             System.out.println(s);
         }

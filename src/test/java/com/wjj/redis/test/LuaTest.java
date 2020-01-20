@@ -1,6 +1,6 @@
 package com.wjj.redis.test;
 
-import com.wjj.redis.util.RedisClient;
+import com.wjj.redis.client.RedisClient;
 import com.wjj.redis.util.ScriptUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;

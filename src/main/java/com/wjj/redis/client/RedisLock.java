@@ -1,4 +1,4 @@
-package com.wjj.redis.util;
+package com.wjj.redis.client;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
